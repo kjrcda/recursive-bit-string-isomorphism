@@ -9,8 +9,8 @@ public class MinBitString
 		boolean isomorphic;
 		long endTime, startTime;
 		
-		g1 = new Graph("Peterson1.txt");
-		g2 = new Graph("Peterson2.txt");
+		g1 = new Graph("TestA.txt");
+		g2 = new Graph("TestB.txt");
 		
 		startTime= System.currentTimeMillis();
 		isomorphic = FindIsomorphism();
@@ -66,8 +66,10 @@ public class MinBitString
 	
 	public static boolean CompareMinimumBitStrings()
 	{
-		
-		return false;
+		BitString one = g1.getMinimumBitString();
+		BitString two = g2.getMinimumBitString();
+		System.out.println(one.getString()+" - "+two.getString());
+		return one.getString().compareTo(two.getString()) ==0;
 	}
 	
 	public static void PrintMapping(int[] map) //O(n)
