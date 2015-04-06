@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Graph 
 {	
@@ -108,6 +109,7 @@ public class Graph
 		return visitCounter;
 	}
 	
+	/**
 	public boolean createEdge(int node1, int node2) //O(1)
 	{
 		if(numNodes==0 || node1>=numNodes || node2>=numNodes || vertAdj[node1][node2]==1)
@@ -147,6 +149,7 @@ public class Graph
 		
 		return true;
 	}
+	*/
 	
 	public boolean isEdge(int from, int to) //O(4)
 	{
@@ -229,48 +232,28 @@ public class Graph
 		return true;
 	}
 	
-
-	/*
-	public BitString getMinimumColBitString()
+	public BitString getMinimumBitString()
 	{
-		return new BitString();
-	}
-	
-	public BitString getMinimumRowBitString()
-	{
-		BitString rows[] = new BitString[numNodes];
-		BitString temp[] = new BitString[numNodes];
-		int[] intRows = new int[numNodes];
-		MergeSorter sort = new MergeSorter();
+		ArrayList<BitString> list = new ArrayList<BitString>();
 		
 		//O(n) make rows
-		for(int i=0; i< numNodes; i++)
+		for(int i=0; i< numNodes-1; i++)
 		{
-			rows[i] = new BitString(i,vertAdj[i], (i+1), numNodes);
-			temp[i] = new BitString(i,vertAdj[i], (i+1), numNodes);
-			intRows[i] = rows[i].value();
+			BitString temp = new BitString(i,vertAdj[i], (i+1), numNodes);
+			if(temp.value()!=0)
+				list.add(temp);
 		}
 		
 		//get min ordering (smallest first)
-		System.out.println(java.util.Arrays.toString(intRows));
-		sort.set(intRows);
-		intRows = sort.mergeSort(); //TODO stopped here
-		System.out.println(java.util.Arrays.toString(intRows));
-		for(int i=0; i<numNodes; i++)
-		{
-			int k=0;
-			int value = temp[i].value();
-			for(k=0; k<numNodes && value != intRows[k]; k++);
-			rows[k] = temp[i];
-		} //rows now has ordered bitstrings
+		System.out.println(java.util.Arrays.toString(list.toArray()));
+		BitString[] arr = new BitString[list.size()];
+		arr = MergeSorter.mergeSort((list.toArray(arr)));
+		System.out.println(java.util.Arrays.toString(arr)+"\n");
 		
-		//make new string to return
-		for(int i=0; i<numNodes; i++)
-			rows[i].printString();
-		
-		
-		
-		return new BitString(); 
-	}*/
+		BitString retVal = new BitString();
+		for(int i=0; i<arr.length;i++)
+			retVal.append(arr[i]);
+		return retVal;
+	}
 
 }
