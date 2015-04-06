@@ -229,6 +229,25 @@ public class Graph
 		return true;
 	}
 	
+	private int[][] constructMappedMatrix(int[] mapping)
+	{
+		int[][] ret = new int[numNodes][numNodes];
+		
+		for(int i=0; i<numNodes; i++)
+		{
+			for(int j=i+1; j<numNodes; j++)
+			{
+				if(vertAdj[i][j]==1)
+				{
+					ret[mapping[i]][mapping[j]] = 1;
+					ret[mapping[j]][mapping[i]] = 1;
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
 	public boolean compareMapping(int[][] second, int[] map) //)(.5n^2)
 	{
 		for(int i=0; i<numNodes; i++)
@@ -240,26 +259,79 @@ public class Graph
 	
 	public BitString getMinimumBitString()
 	{
+		return getMinimumBitString(vertAdj);
+	}
+	
+	public BitString getMinimumBitString(int[] mapping)
+	{
+		return getMinimumBitString(constructMappedMatrix(mapping));
+	}
+	
+	private BitString getMinimumBitString(int[][] matrix)
+	{
 		ArrayList<BitString> list = new ArrayList<BitString>();
 		
 		//O(n) make rows
 		for(int i=0; i< numNodes-1; i++)
 		{
-			BitString temp = new BitString(i,vertAdj[i], (i+1), numNodes);
+			BitString temp = new BitString(i,matrix[i], (i+1), numNodes);
 			if(temp.value()!=0)
 				list.add(temp);
 		}
-		
-		
-		//get min ordering (smallest first)
-		System.out.println(java.util.Arrays.toString(list.toArray()));
+
+		//get min ordering (smallest first lexicographically)
+		//System.out.println(java.util.Arrays.toString(list.toArray()));
 		BitString[] arr = new BitString[list.size()];
-		arr = MergeSorter.mergeSort((list.toArray(arr)));
-		System.out.println(java.util.Arrays.toString(arr)+"\n");
 		
+		//O(nlogn)
+		arr = MergeSorter.mergeSort((list.toArray(arr)));
+		//System.out.println(java.util.Arrays.toString(arr)+"\n");
+		
+		boolean flip = false;
+		int flipIndex = -1;
 		BitString retVal = new BitString();
-		for(int i=0; i<arr.length;i++)
+		//O(n)
+		for(int i=0; i<arr.length && !flip;i++)
+		{
+			if(arr[i].getString().compareTo("1")==0)
+			{
+				flip = true;
+				flipIndex = i;
+			}
+			else
+				retVal.append(arr[i]);
+		}
+		
+		for(int i=arr.length-1; i>=flipIndex && flip; i--)
 			retVal.append(arr[i]);
+		
 		return retVal;
+	}
+	
+	public boolean compareMinBitString(BitString toCompare)
+	{
+		
+		BitString now = getMinimumBitString();
+		return compareString(toCompare.getString(), now.getString());
+
+	}
+	
+	private boolean compareString(String one, String two)
+	{
+		int minLength = one.length()<two.length() ? one.length() : two.length();
+		boolean longer = minLength == two.length() ? true : false;
+		
+		for(int i=0; i<minLength; i++)
+			if(one.charAt(one.length()-1-i) != two.charAt(two.length()-1-i))
+				return false;
+		
+		if(longer) //second is longer, switch them
+			one = two;
+		
+		for(int i=0; i+minLength<one.length(); i++)
+			if(one.charAt(i) == '1')
+				return false;
+		
+		return true;
 	}
 }

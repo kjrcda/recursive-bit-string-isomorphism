@@ -1,6 +1,7 @@
 
 public class MinBitString 
 {
+	private static int[] mapping;
 	private static Graph g1;
 	private static Graph g2;
 	
@@ -9,8 +10,8 @@ public class MinBitString
 		boolean isomorphic;
 		long endTime, startTime;
 		
-		g1 = new Graph("TestA.txt");
-		g2 = new Graph("TestB.txt");
+		g1 = new Graph("first.txt");
+		g2 = new Graph("second.txt");
 		
 		startTime= System.currentTimeMillis();
 		isomorphic = FindIsomorphism();
@@ -41,7 +42,7 @@ public class MinBitString
 		System.out.println("Finished counting\n");
 		
 		System.out.println("Finding isomorphism...");
-		//n!
+		//
 		if(!CompareMinimumBitStrings())
 			return false;
 		
@@ -66,10 +67,49 @@ public class MinBitString
 	
 	public static boolean CompareMinimumBitStrings()
 	{
-		BitString one = g1.getMinimumBitString();
+		boolean found = false;
+		mapping = new int[g1.nodeCount()];
+		
+		for(int i=0; i<mapping.length && !found; i++)
+		{
+			mapping[0] = i;
+			g1.visit(i);
+			found = RecursiveCompare(1);
+			g1.unvisit(i);
+		}
+		
+		/*BitString one = g1.getMinimumBitString();
 		BitString two = g2.getMinimumBitString();
-		System.out.println(one.getString()+" - "+two.getString());
-		return one.getString().compareTo(two.getString()) ==0;
+		System.out.println(one.getString()+" - "+two.getString());*/
+		return found;
+	}
+	
+	private static boolean RecursiveCompare(int currNode)
+	{
+		boolean found = false;
+		int length = g1.nodeCount();
+		
+		if(g1.numVisited() == length)
+			found = true;
+		
+		if(found)
+		{
+			found = false;
+			if(g1.compareMinBitString(g2.getMinimumBitString(mapping)))
+				found = true;
+		}
+		else
+		{
+			for(int i=0; i<length && !found; i++)
+			{
+				mapping[currNode] = i;
+				g1.visit(i);
+				found = RecursiveCompare(currNode+1);
+				g1.unvisit(i);
+			}
+		}
+		
+		return found;
 	}
 	
 	public static void PrintMapping(int[] map) //O(n)
