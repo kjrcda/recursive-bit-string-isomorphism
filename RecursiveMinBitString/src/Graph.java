@@ -34,6 +34,8 @@ public class Graph
 			numNodes = original.numVert;
 			numEdges = original.numEdges;
 			name = original.name;
+			nodeDegrees = new int[numNodes];
+			MakeDegreeList();
 		}
 	}
 	
@@ -43,7 +45,7 @@ public class Graph
 		numEdges = 0;
 		visited = new boolean[numNodes];
 		vertAdj = new int[numNodes][numNodes];
-		nodeDegrees = null;
+		nodeDegrees = new int[numNodes];
 		visitCounter = 0;
 	}
 	 
@@ -62,7 +64,8 @@ public class Graph
 			vertAdj = original.matrix;
 			numNodes = original.numVert;
 			numEdges = original.numEdges;
-			nodeDegrees = null;
+			nodeDegrees = new int[numNodes];
+			MakeDegreeList();
 			visitCounter = 0;
 		}
 		else
@@ -183,13 +186,16 @@ public class Graph
 	
 	private void MakeDegreeList() //O(n^2)
 	{
-		//TODO speed up
-		nodeDegrees = new int[numNodes];
 		for(int i=0; i<numNodes; i++)
 		{
-			for(int j=0; j<numNodes; j++)
+			for(int j=i+1; j<numNodes; j++)
+			{
 				if(vertAdj[i][j] == 1)
+				{
 					nodeDegrees[i]++;
+					nodeDegrees[j]++;
+				}
+			}
 		}
 	}
 	
@@ -244,6 +250,7 @@ public class Graph
 				list.add(temp);
 		}
 		
+		
 		//get min ordering (smallest first)
 		System.out.println(java.util.Arrays.toString(list.toArray()));
 		BitString[] arr = new BitString[list.size()];
@@ -255,5 +262,4 @@ public class Graph
 			retVal.append(arr[i]);
 		return retVal;
 	}
-
 }
