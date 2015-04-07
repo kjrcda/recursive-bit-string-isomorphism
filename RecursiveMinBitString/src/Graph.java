@@ -229,6 +229,7 @@ public class Graph
 		return true;
 	}
 	
+	//O(n^2)
 	private int[][] constructMappedMatrix(int[] mapping)
 	{
 		int[][] ret = new int[numNodes][numNodes];
@@ -248,6 +249,7 @@ public class Graph
 		return ret;
 	}
 	
+	//O(n^2)
 	public boolean compareMapping(int[][] second, int[] map) //)(.5n^2)
 	{
 		for(int i=0; i<numNodes; i++)

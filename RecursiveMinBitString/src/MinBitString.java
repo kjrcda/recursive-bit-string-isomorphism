@@ -4,6 +4,7 @@ public class MinBitString
 	private static int[] mapping;
 	private static Graph g1;
 	private static Graph g2;
+	private static int checkMapCounter=0;
 	
 	public static void main(String[] args)
 	{
@@ -22,6 +23,7 @@ public class MinBitString
 			System.out.println(g1.getName()+" IS isomorphic to "+g2.getName());
 		else
 			System.out.println(g1.getName()+" IS NOT isomorphic to "+g2.getName());
+		System.out.println("Candidate Mappings Checked: "+checkMapCounter);
 		System.out.println("Completion Time: "+ (endTime - startTime)/1000.0 +"s");
 	}
 	
@@ -93,6 +95,7 @@ public class MinBitString
 		if(found)
 		{
 			found = false;
+			checkMapCounter++;
 			if(g1.compareMinBitString(g2.getMinimumBitString(mapping)))
 			{
 				System.out.println(g1.getMinimumBitString().toString());
