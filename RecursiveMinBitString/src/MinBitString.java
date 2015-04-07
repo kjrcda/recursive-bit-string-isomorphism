@@ -10,7 +10,7 @@ public class MinBitString
 		boolean isomorphic;
 		long endTime, startTime;
 		
-		GraphGenerator.generate(1000, true);
+		GraphGenerator.generate(10, true);
 		g1 = new Graph("first.txt");
 		g2 = new Graph("second.txt");
 		
@@ -79,9 +79,6 @@ public class MinBitString
 			g1.unvisit(i);
 		}
 		
-		/*BitString one = g1.getMinimumBitString();
-		BitString two = g2.getMinimumBitString();
-		System.out.println(one.getString()+" - "+two.getString());*/
 		return found;
 	}
 	
@@ -97,16 +94,23 @@ public class MinBitString
 		{
 			found = false;
 			if(g1.compareMinBitString(g2.getMinimumBitString(mapping)))
+			{
+				System.out.println(g1.getMinimumBitString().toString());
+				System.out.println(g2.getMinimumBitString(mapping).toString());
 				found = true;
+			}
 		}
 		else
 		{
 			for(int i=0; i<length && !found; i++)
 			{
-				mapping[currNode] = i;
-				g1.visit(i);
-				found = RecursiveCompare(currNode+1);
-				g1.unvisit(i);
+				if(!g1.isVisited(i))
+				{
+					mapping[currNode] = i;
+					g1.visit(i);
+					found = RecursiveCompare(currNode+1);
+					g1.unvisit(i);
+				}
 			}
 		}
 		
