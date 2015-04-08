@@ -7,7 +7,7 @@ public class Graph
 	private int[][] vertAdj;
 	private int numNodes;
 	private int numEdges;
-	private int[] nodeDegrees = null;
+	private int[] nodeDegrees;
 	private int visitCounter = 0;
 	private GraphInput.GraphResult original = null;
 	
@@ -34,8 +34,7 @@ public class Graph
 			numNodes = original.numVert;
 			numEdges = original.numEdges;
 			name = original.name;
-			nodeDegrees = new int[numNodes];
-			MakeDegreeList();
+			nodeDegrees = original.degrees;
 		}
 	}
 	
@@ -64,8 +63,7 @@ public class Graph
 			vertAdj = original.matrix;
 			numNodes = original.numVert;
 			numEdges = original.numEdges;
-			nodeDegrees = new int[numNodes];
-			MakeDegreeList();
+			nodeDegrees = original.degrees;
 			visitCounter = 0;
 		}
 		else
@@ -121,14 +119,9 @@ public class Graph
 		vertAdj[node1][node2] = 1;
 		vertAdj[node2][node1] = 1;
 		numEdges++;
-				
-		if(nodeDegrees == null)
-			MakeDegreeList();
-		else
-		{
-			nodeDegrees[node1]++;
-			nodeDegrees[node2]++;
-		}
+
+		nodeDegrees[node1]++;
+		nodeDegrees[node2]++;
 		
 		return true;
 	}
@@ -141,14 +134,9 @@ public class Graph
 		vertAdj[node1][node2] = 0;
 		vertAdj[node2][node1] = 0;
 		numEdges--;
-				
-		if(nodeDegrees == null)
-			MakeDegreeList();
-		else
-		{
-			nodeDegrees[node1]--;
-			nodeDegrees[node2]--;
-		}
+
+		nodeDegrees[node1]--;
+		nodeDegrees[node2]--;
 		
 		return true;
 	}
@@ -167,8 +155,6 @@ public class Graph
 	public int[] countDegrees() //O(n)
 	{
 		int[] deg = new int[numNodes];
-		if(nodeDegrees == null)
-			MakeDegreeList();
 		
 		for(int i=0; i<numNodes; i++)
 			deg[nodeDegrees[i]]++;
@@ -178,25 +164,9 @@ public class Graph
 	
 	public int getDegree(int node) //O(1)
 	{
-		if(nodeDegrees == null)
-			MakeDegreeList();
-		
+		if(numNodes==0 || node<0 || node>numNodes-1)
+			return  0;
 		return nodeDegrees[node];
-	}
-	
-	private void MakeDegreeList() //O(n^2)
-	{
-		for(int i=0; i<numNodes; i++)
-		{
-			for(int j=i+1; j<numNodes; j++)
-			{
-				if(vertAdj[i][j] == 1)
-				{
-					nodeDegrees[i]++;
-					nodeDegrees[j]++;
-				}
-			}
-		}
 	}
 	
 	public int[] getAdjacentNodes(int node) //O(n)
