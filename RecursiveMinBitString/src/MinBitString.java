@@ -72,7 +72,6 @@ public class MinBitString
 	{
 		boolean found = false;
 		nodeMap = new int[one.nodeCount()];
-		int halfway = nodeMap.length/2;
 		
 		//O(n!)
 		for(int i=0; i<nodeMap.length && !found; i++)
@@ -82,14 +81,6 @@ public class MinBitString
 			found = RecursiveCompare(1, nodeMap.length);
 			one.unvisit(i);
 		}
-		/*
-		for(int i=halfway; i<nodeMap.length && !found; i++)
-		{
-			nodeMap[halfway] = i;
-			one.visit(i);
-			found = RecursiveCompare(halfway+1, nodeMap.length);
-			one.unvisit(i);
-		}*/
 		
 		return found;
 	}
