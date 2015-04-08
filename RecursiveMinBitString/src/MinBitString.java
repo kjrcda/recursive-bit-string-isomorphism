@@ -101,6 +101,7 @@ public class MinBitString
 			{
 				System.out.println(one.getMinimumBitString().toString());
 				System.out.println(two.getMinimumBitString(nodeMap).toString());
+				PrintMapping(nodeMap);
 				found = true;
 			}
 		}

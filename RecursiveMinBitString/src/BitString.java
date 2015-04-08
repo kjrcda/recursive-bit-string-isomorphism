@@ -3,7 +3,7 @@ public class BitString
 {	
 	private PathList list = new PathList();
 	private String string = "";
-	private int number = 0;
+	private long number = 0;
 	private int vertex = -1;
 	
 	public BitString() {}
@@ -35,7 +35,7 @@ public class BitString
 		return list.size();
 	}
 	
-	public int value()
+	public long value()
 	{
 		return number;
 	}
