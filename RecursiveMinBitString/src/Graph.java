@@ -199,7 +199,7 @@ public class Graph
 		return true;
 	}
 	
-	//O(n^2)
+	//O(.5n^2)
 	private int[][] constructMappedMatrix(int[] mapping)
 	{
 		int[][] ret = new int[numNodes][numNodes];
@@ -239,11 +239,15 @@ public class Graph
 		return getMinimumBitString(constructMappedMatrix(mapping));
 	}
 	
+	//TODO: optimize this function so that it takes a mapping as well
+	//and can create the new BitString in here using g2 matrix + mapping
+	//instead of having the constructMappedMatrix call. Would reduce
+	//O(1.5n^2) work down to O(.5n^2) work for every comparison
 	private BitString getMinimumBitString(int[][] matrix)
 	{
 		ArrayList<BitString> list = new ArrayList<BitString>();
 		
-		//O(n) make rows
+		//O(.5n^2) make rows
 		for(int i=0; i< numNodes-1; i++)
 		{
 			BitString temp = new BitString(i,matrix[i], (i+1), numNodes);

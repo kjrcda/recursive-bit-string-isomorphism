@@ -93,14 +93,14 @@ public class GraphGenerator {
 						graph[i][j] = 1;
 						graph[j][i] = 1;
 					}
-					if(graph[i][j]==0)
+					/*if(graph[i][j]==0)
 					{
 						if(rand.nextBoolean())
 						{
 							graph[i][j] = 1;
 							graph[j][i] = 1;
 						}
-					}
+					}*/
 				}
 			}
 			

@@ -1,63 +1,63 @@
 
 public class MinBitString 
 {
-	private static int[] mapping;
-	private static Graph g1;
-	private static Graph g2;
+	private static int[] nodeMap;
+	private static Graph one;
+	private static Graph two;
 	private static int checkMapCounter=0;
 	
 	public static void main(String[] args)
 	{
 		boolean isomorphic;
-		long endTime, startTime;
+		long end, start;
 		
-		GraphGenerator.generate(10, true);
-		g1 = new Graph("first.txt");
-		g2 = new Graph("second.txt");
+		GraphGenerator.generate(15, true);
+		one = new Graph("first.txt");
+		two = new Graph("second.txt");
 		
-		startTime= System.currentTimeMillis();
+		start= System.currentTimeMillis();
 		isomorphic = FindIsomorphism();
-		endTime = System.currentTimeMillis();
+		end = System.currentTimeMillis();
 		
 		if(isomorphic)
-			System.out.println(g1.getName()+" IS isomorphic to "+g2.getName());
+			System.out.println(one.getName()+" IS isomorphic to "+two.getName());
 		else
-			System.out.println(g1.getName()+" IS NOT isomorphic to "+g2.getName());
+			System.out.println(one.getName()+" IS NOT isomorphic to "+two.getName());
 		System.out.println("Candidate Mappings Checked: "+checkMapCounter);
-		System.out.println("Completion Time: "+ (endTime - startTime)/1000.0 +"s");
+		System.out.println("Completion Time: "+ (end - start)/1000.0 +"s");
 	}
 	
 	public static boolean FindIsomorphism()
 	{
-		//O(2)
-		System.out.println("\nCounting nodes and edges...");
-		if(g1.nodeCount() != g2.nodeCount())
+		//O(1)
+		System.out.println("Counting nodes and edges...");
+		if(one.nodeCount() != two.nodeCount())
 			return false;
-		if(g1.edgeCount()!=g2.edgeCount())
+		if(one.edgeCount()!=two.edgeCount())
 			return false;
-		System.out.println("Number of Nodes: "+g1.nodeCount()+ "\nNumber of Edges: "+g1.edgeCount());
+		System.out.println("Number of Nodes: "+one.nodeCount()+ "\nNumber of Edges: "+one.edgeCount());
 		System.out.println("Finished counting\n");
 		
-		//O(n^2)
+		//O(n)
 		System.out.println("Counting degrees...");
-		if(!MatchingDegrees(g1, g2))
+		if(!DegreeCompare())
 			return false;
 		System.out.println("Finished counting\n");
 		
 		System.out.println("Finding isomorphism...");
-		//
+		//O()
 		if(!CompareMinimumBitStrings())
 			return false;
 		
 		return true;
 	}
 	
-	public static boolean MatchingDegrees(Graph one, Graph two) //O(2n^2) + O(3n) 
+	public static boolean DegreeCompare() //O(3n) 
 	{
-		int[] degList1 = one.countDegrees(); //O(n^2) + O(n)
-		int[] degList2 = two.countDegrees(); //O(n^2) + O(n)
+		int[] degList1 = one.countDegrees(); //O(n)
+		int[] degList2 = two.countDegrees(); //O(n)
 	
-		if(degList1.length != degList2.length) //O(2)
+		if(degList1.length != degList2.length) //O(1)
 			return false;
 		
 		for(int i=0; i<degList1.length; i++) //O(n)
@@ -71,14 +71,15 @@ public class MinBitString
 	public static boolean CompareMinimumBitStrings()
 	{
 		boolean found = false;
-		mapping = new int[g1.nodeCount()];
+		nodeMap = new int[one.nodeCount()];
 		
-		for(int i=0; i<mapping.length && !found; i++)
+		//O(n!)
+		for(int i=0; i<nodeMap.length && !found; i++)
 		{
-			mapping[0] = i;
-			g1.visit(i);
+			nodeMap[0] = i;
+			one.visit(i);
 			found = RecursiveCompare(1);
-			g1.unvisit(i);
+			one.unvisit(i);
 		}
 		
 		return found;
@@ -87,19 +88,19 @@ public class MinBitString
 	private static boolean RecursiveCompare(int currNode)
 	{
 		boolean found = false;
-		int length = g1.nodeCount();
+		int length = one.nodeCount();
 		
-		if(g1.numVisited() == length)
+		if(one.numVisited() == length)
 			found = true;
 		
 		if(found)
 		{
 			found = false;
 			checkMapCounter++;
-			if(g1.compareMinBitString(g2.getMinimumBitString(mapping)))
+			if(one.compareMinBitString(two.getMinimumBitString(nodeMap)))
 			{
-				System.out.println(g1.getMinimumBitString().toString());
-				System.out.println(g2.getMinimumBitString(mapping).toString());
+				System.out.println(one.getMinimumBitString().toString());
+				System.out.println(two.getMinimumBitString(nodeMap).toString());
 				found = true;
 			}
 		}
@@ -107,12 +108,12 @@ public class MinBitString
 		{
 			for(int i=0; i<length && !found; i++)
 			{
-				if(!g1.isVisited(i))
+				if(!one.isVisited(i))
 				{
-					mapping[currNode] = i;
-					g1.visit(i);
+					nodeMap[currNode] = i;
+					one.visit(i);
 					found = RecursiveCompare(currNode+1);
-					g1.unvisit(i);
+					one.unvisit(i);
 				}
 			}
 		}
