@@ -9,6 +9,7 @@ public class Graph
 	private int numEdges;
 	private int[] nodeDegrees;
 	private int visitCounter = 0;
+	private BitString min = null;
 	private GraphInput.GraphResult original = null;
 	
 	public Graph() //O(0)
@@ -231,7 +232,9 @@ public class Graph
 	
 	public BitString getMinimumBitString()
 	{
-		return getMinimumBitString(vertAdj);
+		if(min == null)
+			min = getMinimumBitString(vertAdj);
+		return min;
 	}
 	
 	public BitString getMinimumBitString(int[] mapping)

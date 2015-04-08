@@ -11,7 +11,7 @@ public class MinBitString
 		boolean isomorphic;
 		long end, start;
 		
-		GraphGenerator.generate(15, true);
+		GraphGenerator.generate(10, true);
 		one = new Graph("first.txt");
 		two = new Graph("second.txt");
 		
@@ -72,23 +72,31 @@ public class MinBitString
 	{
 		boolean found = false;
 		nodeMap = new int[one.nodeCount()];
+		int halfway = nodeMap.length/2;
 		
 		//O(n!)
 		for(int i=0; i<nodeMap.length && !found; i++)
 		{
 			nodeMap[0] = i;
 			one.visit(i);
-			found = RecursiveCompare(1);
+			found = RecursiveCompare(1, nodeMap.length);
 			one.unvisit(i);
 		}
+		/*
+		for(int i=halfway; i<nodeMap.length && !found; i++)
+		{
+			nodeMap[halfway] = i;
+			one.visit(i);
+			found = RecursiveCompare(halfway+1, nodeMap.length);
+			one.unvisit(i);
+		}*/
 		
 		return found;
 	}
 	
-	private static boolean RecursiveCompare(int currNode)
+	private static boolean RecursiveCompare(int currNode, int length)
 	{
 		boolean found = false;
-		int length = one.nodeCount();
 		
 		if(one.numVisited() == length)
 			found = true;
@@ -97,6 +105,7 @@ public class MinBitString
 		{
 			found = false;
 			checkMapCounter++;
+			//TODO: this work is what is taking forever out of 16 seconds this takes 15.8
 			if(one.compareMinBitString(two.getMinimumBitString(nodeMap)))
 			{
 				System.out.println(one.getMinimumBitString().toString());
@@ -112,7 +121,7 @@ public class MinBitString
 				{
 					nodeMap[currNode] = i;
 					one.visit(i);
-					found = RecursiveCompare(currNode+1);
+					found = RecursiveCompare(currNode+1, length);
 					one.unvisit(i);
 				}
 			}
