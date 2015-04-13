@@ -11,7 +11,7 @@ public class MinBitString
 		boolean isomorphic;
 		long end, start;
 		
-		GraphGenerator.generate(10, true);
+		//GraphGenerator.generate(10, true);
 		one = new Graph("first.txt");
 		two = new Graph("second.txt");
 		

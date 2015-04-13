@@ -17,7 +17,7 @@ public class Graph
 		init(0);
 	}
 	
-	public Graph(int nodes) //O(n^2)
+	public Graph(int nodes) //O(1)
 	{
 		init(nodes);
 	}
@@ -27,7 +27,7 @@ public class Graph
 		GraphInput graph = new GraphInput(filename); 
 		original = graph.readInput(); //O(.5e) e = edges
 		if(original == null)
-			init(0); //O(0)
+			init(0); 
 		else
 		{
 			visited = original.visited;
@@ -39,7 +39,7 @@ public class Graph
 		}
 	}
 	
-	private void init(int nodes) //O(n^2) (could be O(1))
+	private void init(int nodes) //O(1)
 	{
 		numNodes = nodes;
 		numEdges = 0;
@@ -200,8 +200,7 @@ public class Graph
 		return true;
 	}
 	
-	//O(.5n^2)
-	private int[][] constructMappedMatrix(int[] mapping)
+	private int[][] constructMappedMatrix(int[] mapping) //O(.5n^2)
 	{
 		int[][] ret = new int[numNodes][numNodes];
 		
@@ -220,7 +219,6 @@ public class Graph
 		return ret;
 	}
 	
-	//O(n^2)
 	public boolean compareMapping(int[][] second, int[] map) //)(.5n^2)
 	{
 		for(int i=0; i<numNodes; i++)
@@ -272,7 +270,7 @@ public class Graph
 		//O(n)
 		for(int i=0; i<arr.length && !flip;i++)
 		{
-			if(arr[i].getString().compareTo("1")==0)
+			if(!arr[i].getString().contains("0"))
 			{
 				flip = true;
 				flipIndex = i;
